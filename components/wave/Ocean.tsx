@@ -25,14 +25,13 @@ export default function Ocean() {
       uTime: { value: 0 },
       uMouse: { value: new THREE.Vector2(0, 0) },
       uMouseStrength: { value: 0 },
-      uBigWaveElevation: { value: 0.22 },
-      uBigWaveFrequency: { value: new THREE.Vector2(0.32, 0.22) },
-      uBigWaveSpeed: { value: 0.65 },
-      uDepthColor: { value: new THREE.Color("#02040a") },
-      uSurfaceColor: { value: new THREE.Color("#1f6dff") },
-      uFoamColor: { value: new THREE.Color("#eaf2ff") },
-      uColorOffset: { value: 0.28 },
-      uColorMultiplier: { value: 2.4 },
+      uElevation: { value: 0.085 },
+      uSpeed: { value: 0.32 },
+      uDepthColor: { value: new THREE.Color("#01181c") },
+      uSurfaceColor: { value: new THREE.Color("#006f80") },
+      uFoamColor: { value: new THREE.Color("#bfe6ea") },
+      uColorOffset: { value: 0.18 },
+      uColorMultiplier: { value: 3.0 },
     }),
     []
   );
@@ -74,7 +73,7 @@ export default function Ocean() {
 
   return (
     <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.4, 0]}>
-      <planeGeometry args={[24, 24, 320, 320]} />
+      <planeGeometry args={[24, 24, 256, 256]} />
       <shaderMaterial
         ref={matRef}
         vertexShader={vertexShader}

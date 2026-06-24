@@ -1,19 +1,21 @@
-// GLSL shaders for the Wavency interactive fluid wave.
-// A subdivided plane is displaced by layered noise + sine swells, and the
-// cursor pushes a travelling ripple across the surface. Colouring stays in a
-// deep-black -> ocean-blue -> white-foam range for a soothing, luxe feel.
+// GLSL shaders for the Wavency interactive ocean.
+// A subdivided plane is displaced by directional swells + fractal noise to read
+// as real, calm dark water. Per-fragment lighting (diffuse + specular glints +
+// fresnel sheen) sells the realism, and the cursor pushes a soft ripple across
+// the surface. Palette stays in deep-teal -> Wavency #006F80 -> pale foam.
 
 export const vertexShader = /* glsl */ `
   uniform float uTime;
-  uniform vec2 uMouse;        // mouse position in plane-local space (XZ-ish)
+  uniform vec2 uMouse;        // mouse position in plane-local space
   uniform float uMouseStrength;
-  uniform float uBigWaveElevation;
-  uniform vec2 uBigWaveFrequency;
-  uniform float uBigWaveSpeed;
+  uniform float uElevation;   // overall wave height (calm = small)
+  uniform float uSpeed;
 
   varying float vElevation;
   varying vec2 vUv;
   varying float vMouseDist;
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
 
   //
   // Classic 3D Simplex noise — Ashima Arts / Stefan Gustavson (MIT).
@@ -64,39 +66,55 @@ export const vertexShader = /* glsl */ `
     return 42.0 * dot(m * m, vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
   }
 
-  void main() {
-    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+  // Surface height at a point — two gentle directional swells plus several
+  // octaves of drifting noise for fine, realistic chop. Kept low-amplitude so
+  // the water reads calm.
+  float getElevation(vec2 p) {
+    float t = uTime * uSpeed;
+    float e = 0.0;
+    e += sin(dot(p, vec2(1.0, 0.35)) * 0.5 + t * 0.9) * 0.55;
+    e += sin(dot(p, vec2(-0.35, 1.0)) * 0.7 + t * 0.7) * 0.40;
 
-    // Large rolling swell built from two crossed sine waves.
-    float elevation =
-        sin(modelPosition.x * uBigWaveFrequency.x + uTime * uBigWaveSpeed)
-      * sin(modelPosition.z * uBigWaveFrequency.y + uTime * uBigWaveSpeed)
-      * uBigWaveElevation;
-
-    // Layered fractal noise for organic surface detail.
-    for (float i = 1.0; i <= 4.0; i++) {
-      elevation -= abs(
-        snoise(vec3(
-          modelPosition.xz * (1.2 * i),
-          uTime * 0.18
-        )) * (0.18 / i)
-      );
+    float amp = 0.5;
+    float freq = 0.9;
+    for (int i = 0; i < 4; i++) {
+      e += snoise(vec3(p * freq, t * 0.18)) * amp;
+      freq *= 1.95;
+      amp *= 0.5;
     }
+    return e * uElevation;
+  }
 
-    // Cursor ripple: a travelling ring that pushes the surface up near the
-    // pointer and fades out with distance.
-    float dist = distance(modelPosition.xz, uMouse);
+  void main() {
+    vec3 pos = position;
+    vec2 p = pos.xy;
+
+    float elevation = getElevation(p);
+
+    // Soft cursor ripple — a gentle swell + a slow travelling ring.
+    float dist = distance(p, uMouse);
     vMouseDist = dist;
-    float ripple = sin(dist * 6.0 - uTime * 4.0) * exp(-dist * 1.6);
-    elevation += ripple * uMouseStrength * 0.4;
-    elevation += exp(-dist * 2.2) * uMouseStrength * 0.35;
+    float ring = sin(dist * 4.5 - uTime * 3.0) * exp(-dist * 1.4);
+    elevation += ring * uMouseStrength * 0.18;
+    elevation += exp(-dist * 1.8) * uMouseStrength * 0.22;
 
-    modelPosition.y += elevation;
+    pos.z += elevation;
 
+    // Normal via finite differences of the height field (for lighting).
+    float eps = 0.12;
+    float hL = getElevation(p - vec2(eps, 0.0));
+    float hR = getElevation(p + vec2(eps, 0.0));
+    float hD = getElevation(p - vec2(0.0, eps));
+    float hU = getElevation(p + vec2(0.0, eps));
+    vec3 n = normalize(vec3(hL - hR, hD - hU, 2.0 * eps));
+
+    vec4 worldPos = modelMatrix * vec4(pos, 1.0);
+    vWorldPos = worldPos.xyz;
+    vNormal = normalize(mat3(modelMatrix) * n);
     vElevation = elevation;
     vUv = uv;
 
-    gl_Position = projectionMatrix * viewMatrix * modelPosition;
+    gl_Position = projectionMatrix * viewMatrix * worldPos;
   }
 `;
 
@@ -110,21 +128,43 @@ export const fragmentShader = /* glsl */ `
   varying float vElevation;
   varying vec2 vUv;
   varying float vMouseDist;
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
 
   void main() {
-    float mixStrength = (vElevation + uColorOffset) * uColorMultiplier;
-    mixStrength = clamp(mixStrength, 0.0, 1.0);
+    vec3 normal = normalize(vNormal);
+    vec3 viewDir = normalize(cameraPosition - vWorldPos);
 
+    // Key light low on the horizon for long, calm glints across the swell.
+    vec3 lightDir = normalize(vec3(0.35, 0.55, 0.45));
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 halfDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(normal, halfDir), 0.0), 80.0);
+    float fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 4.0);
+
+    // Base depth->surface gradient driven by height.
+    float mixStrength = clamp((vElevation + uColorOffset) * uColorMultiplier, 0.0, 1.0);
     vec3 color = mix(uDepthColor, uSurfaceColor, mixStrength);
 
-    // White foam on the highest crests and around the cursor.
-    float foam = smoothstep(0.18, 0.42, vElevation);
-    foam += (1.0 - smoothstep(0.0, 0.35, vMouseDist)) * 0.25;
-    color = mix(color, uFoamColor, clamp(foam, 0.0, 1.0));
+    // Gentle teal diffuse + a restrained fresnel sheen (kept low so there is
+    // no bright glowing horizon — the water stays dark and uniform).
+    color += uSurfaceColor * diff * 0.14;
+    color = mix(color, uSurfaceColor * 1.15, fresnel * 0.12);
 
-    // Vignette toward the horizon so the plane melts into the black page.
-    float fade = smoothstep(0.0, 0.55, vUv.y);
-    color = mix(vec3(0.0), color, fade);
+    // Sparse specular glints — subtle, like moonlight on calm water.
+    color += vec3(0.55, 0.78, 0.82) * spec * 0.45;
+
+    // A whisper of foam only on the highest crests + a soft halo at the cursor.
+    float foam = smoothstep(0.6, 0.98, vElevation);
+    foam += (1.0 - smoothstep(0.0, 0.45, vMouseDist)) * 0.1;
+    color = mix(color, uFoamColor, clamp(foam, 0.0, 0.5));
+
+    // Keep the surface calm and nocturnal, but still readable.
+    color *= 0.95;
+
+    // Gently settle the far edge into the page.
+    float depthFade = smoothstep(0.0, 0.4, vUv.y);
+    color = mix(uDepthColor, color, depthFade);
 
     gl_FragColor = vec4(color, 1.0);
     #include <colorspace_fragment>

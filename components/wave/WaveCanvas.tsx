@@ -13,10 +13,10 @@ export default function WaveCanvas() {
       className="wave-canvas"
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: false }}
-      camera={{ position: [0, 1.2, 5.5], fov: 42, near: 0.1, far: 100 }}
+      camera={{ position: [0, 1.7, 4.6], fov: 44, near: 0.1, far: 100 }}
     >
-      <color attach="background" args={["#02030a"]} />
-      <fog attach="fog" args={["#02030a", 6, 16]} />
+      <color attach="background" args={["#020b0d"]} />
+      <fog attach="fog" args={["#020b0d", 7.5, 16]} />
       <Suspense fallback={null}>
         <Ocean />
       </Suspense>

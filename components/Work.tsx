@@ -17,28 +17,28 @@ const projects: Project[] = [
     tag: "Brand · Product",
     year: "2025",
     role: "Identity, App, Motion",
-    hue: "210",
+    hue: "188",
   },
   {
     title: "Lumen Studios",
     tag: "Web · Art Direction",
     year: "2024",
     role: "Website, 3D, WebGL",
-    hue: "225",
+    hue: "192",
   },
   {
     title: "Atlas Mobility",
     tag: "Product · Design System",
     year: "2024",
     role: "UX, System, Prototype",
-    hue: "200",
+    hue: "184",
   },
   {
     title: "Nocturne Records",
     tag: "Brand · Campaign",
     year: "2023",
     role: "Identity, Spatial, Film",
-    hue: "232",
+    hue: "194",
   },
 ];
 
