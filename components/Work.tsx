@@ -13,31 +13,31 @@ type Project = {
 
 const projects: Project[] = [
   {
-    title: "Tidal — Banking Reimagined",
-    tag: "Brand · Product",
+    title: "Tidal — La banque réinventée",
+    tag: "Marque · Produit",
     year: "2025",
-    role: "Identity, App, Motion",
+    role: "Identité, App, Motion",
     hue: "188",
   },
   {
     title: "Lumen Studios",
-    tag: "Web · Art Direction",
+    tag: "Web · Direction artistique",
     year: "2024",
-    role: "Website, 3D, WebGL",
+    role: "Site web, 3D, WebGL",
     hue: "192",
   },
   {
     title: "Atlas Mobility",
-    tag: "Product · Design System",
+    tag: "Produit · Design System",
     year: "2024",
-    role: "UX, System, Prototype",
+    role: "UX, Système, Prototype",
     hue: "184",
   },
   {
     title: "Nocturne Records",
-    tag: "Brand · Campaign",
+    tag: "Marque · Campagne",
     year: "2023",
-    role: "Identity, Spatial, Film",
+    role: "Identité, Spatial, Film",
     hue: "194",
   },
 ];
@@ -82,10 +82,10 @@ export default function Work() {
       <div className="shell">
         <Reveal>
           <div className="section-head">
-            <h2 className="display">Selected work</h2>
+            <h2 className="display">Projets sélectionnés</h2>
             <p>
-              A glimpse of recent collaborations — each one a partnership built
-              to make brands move with intent.
+              Un aperçu de nos collaborations récentes — chacune un partenariat
+              pensé pour faire avancer les marques avec intention.
             </p>
           </div>
         </Reveal>

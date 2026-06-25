@@ -16,13 +16,13 @@ const body = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Wavency — Digital Design Studio",
+  title: "Wavency — Studio de Design Numérique",
   description:
-    "Wavency is a digital design studio crafting fluid brand and product experiences. We turn motion, story and code into work that moves people.",
+    "Wavency est un studio de design numérique qui crée des expériences de marque et de produit fluides. Nous transformons le mouvement, le récit et le code en réalisations qui font vibrer.",
   openGraph: {
-    title: "Wavency — Digital Design Studio",
+    title: "Wavency — Studio de Design Numérique",
     description:
-      "A digital design studio crafting fluid brand and product experiences.",
+      "Un studio de design numérique qui crée des expériences de marque et de produit fluides.",
     type: "website",
   },
 };
@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html lang="fr" className={`${display.variable} ${body.variable}`}>
       <body>{children}</body>
     </html>
   );

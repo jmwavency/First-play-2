@@ -4,20 +4,20 @@ import Reveal from "./Reveal";
 
 const services = [
   {
-    title: "Brand Identity",
-    desc: "Naming, visual systems and motion principles that give a brand a living, fluid signature.",
+    title: "Identité de marque",
+    desc: "Naming, systèmes visuels et principes de mouvement qui donnent à une marque une signature vivante et fluide.",
   },
   {
-    title: "Digital Product",
-    desc: "End-to-end product design — research, UX, interface systems and high-fidelity prototypes.",
+    title: "Produit numérique",
+    desc: "Conception de produit de bout en bout — recherche, UX, systèmes d'interface et prototypes haute fidélité.",
   },
   {
-    title: "Web & Interactive",
-    desc: "Award-calibre websites with WebGL, real-time motion and engineering done in-house.",
+    title: "Web & Interactif",
+    desc: "Des sites web de calibre international avec WebGL, mouvement en temps réel et développement maison.",
   },
   {
-    title: "Art Direction",
-    desc: "Campaigns, 3D, film and spatial storytelling that carry the brand across every surface.",
+    title: "Direction artistique",
+    desc: "Campagnes, 3D, film et narration spatiale qui portent la marque sur chaque support.",
   },
 ];
 
@@ -27,10 +27,11 @@ export default function Services() {
       <div className="shell">
         <Reveal>
           <div className="section-head">
-            <h2 className="display">What we do</h2>
+            <h2 className="display">Nos expertises</h2>
             <p>
-              Four disciplines, one continuous craft. We move fluidly between
-              them so the work never loses its rhythm.
+              Quatre disciplines, un seul savoir-faire continu. Nous passons de
+              l&rsquo;une à l&rsquo;autre avec fluidité pour que le travail ne
+              perde jamais son rythme.
             </p>
           </div>
         </Reveal>

@@ -29,7 +29,7 @@ export default function Hero() {
             transition={{ duration: 1, delay: 0.2 }}
             style={{ marginBottom: 26 }}
           >
-            Digital Design Studio · Est. 2019
+            Studio de Design Numérique · Depuis 2019
           </motion.p>
 
           <h1 className="display">
@@ -41,7 +41,7 @@ export default function Hero() {
                 animate="show"
                 custom={0}
               >
-                We design
+                Nous créons
               </motion.span>
             </span>
             <span style={{ display: "block", overflow: "hidden" }}>
@@ -52,7 +52,7 @@ export default function Hero() {
                 animate="show"
                 custom={1}
               >
-                in <em>motion</em>.
+                en <em>mouvement</em>.
               </motion.span>
             </span>
           </h1>
@@ -63,8 +63,9 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.7 }}
           >
-            Wavency is a studio for brands that refuse to sit still. We shape
-            fluid identities, products and stories — engineered to move people.
+            Wavency est un studio pour les marques qui refusent l&rsquo;immobilité.
+            Nous façonnons des identités, produits et récits fluides — conçus
+            pour faire vibrer.
           </motion.p>
         </div>
       </div>
@@ -73,10 +74,10 @@ export default function Hero() {
         <div className="hero-meta-inner">
           <div className="scroll-hint">
             <span className="bar" />
-            Scroll to explore
+            Défilez pour explorer
           </div>
           <div className="scroll-hint" style={{ letterSpacing: "0.14em" }}>
-            Move your cursor · feel the wave
+            Bougez votre curseur · sentez la vague
           </div>
         </div>
       </div>

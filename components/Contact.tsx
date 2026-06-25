@@ -9,14 +9,14 @@ export default function Contact() {
       <div className="shell contact-inner">
         <Reveal>
           <p className="eyebrow" style={{ marginBottom: 30 }}>
-            Have something in motion?
+            Un projet en mouvement ?
           </p>
         </Reveal>
         <Reveal delay={0.05}>
           <h2>
-            Let&rsquo;s make
+            Créons des
             <br />
-            waves together.
+            vagues ensemble.
           </h2>
         </Reveal>
         <Reveal delay={0.12}>

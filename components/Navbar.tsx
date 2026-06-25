@@ -7,8 +7,8 @@ export default function Navbar() {
         <img src="/wavency-logo.png" alt="Wavency" />
       </a>
       <div className="nav-links">
-        <a href="#work">Work</a>
-        <a href="#services">Services</a>
+        <a href="#work">Réalisations</a>
+        <a href="#services">Expertises</a>
         <a href="#about">Studio</a>
         <a href="#contact">Contact</a>
       </div>

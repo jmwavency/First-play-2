@@ -3,10 +3,10 @@
 import Reveal from "./Reveal";
 
 const stats = [
-  { n: "6", l: "Years in motion" },
-  { n: "40+", l: "Brands shaped" },
-  { n: "12", l: "Awards & honours" },
-  { n: "9", l: "Countries reached" },
+  { n: "6", l: "Années en mouvement" },
+  { n: "40+", l: "Marques façonnées" },
+  { n: "12", l: "Prix & distinctions" },
+  { n: "9", l: "Pays touchés" },
 ];
 
 export default function About() {
@@ -15,15 +15,15 @@ export default function About() {
       <div className="shell">
         <Reveal>
           <p className="eyebrow" style={{ marginBottom: 44 }}>
-            (The studio)
+            (Le studio)
           </p>
         </Reveal>
         <Reveal delay={0.05}>
           <p className="manifesto">
-            We believe great design <em>flows</em>.{" "}
+            Nous croyons qu&rsquo;un grand design <em>coule</em>.{" "}
             <span className="muted">
-              It bends to the people it serves, it never stands still, and it
-              leaves a wake worth following.
+              Il s&rsquo;adapte à ceux qu&rsquo;il sert, ne reste jamais figé, et
+              laisse un sillage que l&rsquo;on a envie de suivre.
             </span>
           </p>
         </Reveal>
