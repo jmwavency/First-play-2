@@ -195,6 +195,51 @@ a {
   inset: 0;
   z-index: 0;
 }
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--black);
+}
+.hero-video-wrap {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Pull a bright daylight surf clip toward the dark Wavency teal. */
+  filter: brightness(0.62) contrast(1.06) saturate(1.05) hue-rotate(8deg);
+  transition: opacity 1.1s var(--ease);
+}
+.hero-grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+      180deg,
+      rgba(2, 11, 13, 0.55) 0%,
+      rgba(0, 60, 70, 0.18) 35%,
+      rgba(2, 11, 13, 0.65) 100%
+    ),
+    radial-gradient(
+      120% 100% at 50% 30%,
+      rgba(0, 111, 128, 0.28),
+      transparent 70%
+    );
+  mix-blend-mode: multiply;
+}
+.hero-grade::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, var(--black) 100%);
+}
 .hero-overlay {
   position: absolute;
   inset: 0;

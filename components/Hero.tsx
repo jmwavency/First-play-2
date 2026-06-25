@@ -1,10 +1,7 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-
-// The WebGL canvas is client-only — load it lazily so it never blocks paint.
-const WaveCanvas = dynamic(() => import("./wave/WaveCanvas"), { ssr: false });
+import HeroMedia from "./HeroMedia";
 
 const rise = {
   hidden: { opacity: 0, y: "110%" },
@@ -18,7 +15,7 @@ const rise = {
 export default function Hero() {
   return (
     <header className="hero" id="top">
-      <WaveCanvas />
+      <HeroMedia />
 
       <div className="hero-overlay">
         <div className="hero-content">
