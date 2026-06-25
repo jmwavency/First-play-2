@@ -33,7 +33,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="footer-mark">Wavency</div>
+        <img className="footer-mark" src="/wavency-logo.png" alt="Wavency" />
 
         <div className="footer-bottom">
           <span>© {2026} Wavency Studio. All rights reserved.</span>

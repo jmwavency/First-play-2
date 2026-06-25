@@ -134,13 +134,13 @@ a {
   mix-blend-mode: difference;
 }
 .nav-logo {
-  font-family: var(--font-display), sans-serif;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
   display: flex;
   align-items: center;
-  gap: 9px;
+}
+.nav-logo img {
+  height: 22px;
+  width: auto;
+  display: block;
 }
 .nav-logo .dot {
   width: 9px;
@@ -579,13 +579,11 @@ section {
   color: var(--white);
 }
 .footer-mark {
-  font-family: var(--font-display), sans-serif;
-  font-size: clamp(3rem, 16vw, 13rem);
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 0.9;
-  margin: 60px 0 30px;
-  color: var(--white);
+  display: block;
+  width: 100%;
+  max-width: 1100px;
+  height: auto;
+  margin: 56px 0 34px;
   opacity: 0.96;
 }
 .footer-bottom {
