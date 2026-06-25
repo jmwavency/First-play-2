@@ -1,85 +1,60 @@
 "use client";
 
 import { useMemo, useRef } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { vertexShader, fragmentShader } from "./shaders";
+import { Water } from "three-stdlib";
 
-// The displaced plane. Tracks the pointer by raycasting onto the mesh so the
-// ripple originates from the exact point under the cursor, and eases a
-// "strength" value up on movement / down on stillness for a fluid feel.
+// Photoreal ocean built on the classic three.js Water shader: a flat reflective
+// sea whose ripples come from an animated tiling normal map, lit by a sun glint.
+// The sun direction eases toward the cursor, so the glitter path follows the
+// pointer — the water still "reacts" to you while reading as real footage.
 export default function Ocean() {
-  const meshRef = useRef<THREE.Mesh>(null!);
-  const matRef = useRef<THREE.ShaderMaterial>(null!);
-  const { raycaster, pointer, camera } = useThree();
+  const waterRef = useRef<Water>(null!);
+  const { pointer } = useThree();
 
-  // Target + smoothed pointer position in the plane's local space.
-  const targetMouse = useRef(new THREE.Vector2(0, 0));
-  const smoothMouse = useRef(new THREE.Vector2(0, 0));
-  const targetStrength = useRef(0);
-  const smoothStrength = useRef(0);
-  const lastPointer = useRef(new THREE.Vector2(0, 0));
+  const normals = useLoader(THREE.TextureLoader, "/waternormals.jpg");
+  normals.wrapS = normals.wrapT = THREE.RepeatWrapping;
 
-  const uniforms = useMemo(
-    () => ({
-      uTime: { value: 0 },
-      uMouse: { value: new THREE.Vector2(0, 0) },
-      uMouseStrength: { value: 0 },
-      uElevation: { value: 0.085 },
-      uSpeed: { value: 0.32 },
-      uDepthColor: { value: new THREE.Color("#01181c") },
-      uSurfaceColor: { value: new THREE.Color("#006f80") },
-      uFoamColor: { value: new THREE.Color("#bfe6ea") },
-      uColorOffset: { value: 0.18 },
-      uColorMultiplier: { value: 3.0 },
-    }),
-    []
-  );
+  const water = useMemo(() => {
+    const geometry = new THREE.PlaneGeometry(2000, 2000);
+    const w = new Water(geometry, {
+      textureWidth: 512,
+      textureHeight: 512,
+      waterNormals: normals,
+      sunDirection: new THREE.Vector3(0.2, 0.16, -0.6).normalize(),
+      sunColor: 0xc4eef4,
+      waterColor: 0x00606e, // Wavency teal, kept deep
+      distortionScale: 3.0,
+      fog: true,
+      alpha: 1.0,
+    });
+    w.rotation.x = -Math.PI / 2;
+    // Tighten the ripple scale so the sea reads detailed, not stretched.
+    (w.material as THREE.ShaderMaterial).uniforms.size.value = 3.2;
+    return w;
+  }, [normals]);
 
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
-    if (matRef.current) {
-      matRef.current.uniforms.uTime.value = t;
-    }
+  // Eased sun azimuth/elevation targets driven by the cursor.
+  const sun = useRef({ az: 0.2, el: 0.16 });
+  const target = useRef({ az: 0.2, el: 0.16 });
 
-    // Raycast the current pointer onto the wave plane.
-    raycaster.setFromCamera(pointer, camera);
-    const hit = raycaster.intersectObject(meshRef.current, false)[0];
-    if (hit) {
-      const local = meshRef.current.worldToLocal(hit.point.clone());
-      // Plane is rotated -90deg on X, so local X/Y maps to world X/Z.
-      targetMouse.current.set(local.x, local.y);
-    }
+  useFrame((_, delta) => {
+    const mat = water.material as THREE.ShaderMaterial;
+    mat.uniforms.time.value += delta * 0.35; // calm drift
 
-    // Detect movement to drive ripple strength.
-    const moved = pointer.distanceTo(lastPointer.current);
-    lastPointer.current.copy(pointer);
-    targetStrength.current = THREE.MathUtils.clamp(moved * 40, 0, 1);
+    target.current.az = pointer.x * 0.6;
+    target.current.el = 0.12 + (pointer.y * 0.5 + 0.5) * 0.18;
+    const k = 1 - Math.pow(0.0015, delta);
+    sun.current.az += (target.current.az - sun.current.az) * k;
+    sun.current.el += (target.current.el - sun.current.el) * k;
 
-    // Ease everything for buttery motion.
-    smoothMouse.current.lerp(targetMouse.current, 1 - Math.pow(0.001, delta));
-    smoothStrength.current = THREE.MathUtils.damp(
-      smoothStrength.current,
-      Math.max(targetStrength.current, smoothStrength.current * 0.92),
-      4,
-      delta
-    );
-
-    if (matRef.current) {
-      matRef.current.uniforms.uMouse.value.copy(smoothMouse.current);
-      matRef.current.uniforms.uMouseStrength.value = smoothStrength.current;
-    }
+    const az = sun.current.az;
+    const el = sun.current.el;
+    mat.uniforms.sunDirection.value
+      .set(Math.sin(az), Math.max(el, 0.02), -Math.cos(az))
+      .normalize();
   });
 
-  return (
-    <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.4, 0]}>
-      <planeGeometry args={[24, 24, 256, 256]} />
-      <shaderMaterial
-        ref={matRef}
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        uniforms={uniforms}
-      />
-    </mesh>
-  );
+  return <primitive ref={waterRef} object={water} position={[0, 0, 0]} />;
 }

@@ -4,19 +4,21 @@ import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import Ocean from "./Ocean";
 
-// Full-bleed WebGL canvas sitting behind the hero copy. The camera looks
-// across the wave surface at a low angle so it reads as an endless ocean
-// fading into the black of the page.
+// Full-bleed WebGL canvas behind the hero copy. The camera sits just above the
+// sea looking toward the horizon so the water fills the frame and melts into
+// the dark page via fog — like real ocean footage.
 export default function WaveCanvas() {
   return (
     <Canvas
       className="wave-canvas"
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: false }}
-      camera={{ position: [0, 1.7, 4.6], fov: 44, near: 0.1, far: 100 }}
+      camera={{ position: [0, 12, 48], fov: 46, near: 1, far: 4000 }}
     >
       <color attach="background" args={["#020b0d"]} />
-      <fog attach="fog" args={["#020b0d", 7.5, 16]} />
+      <fog attach="fog" args={["#020b0d", 70, 700]} />
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[-10, 30, -20]} intensity={0.4} color="#a9dde4" />
       <Suspense fallback={null}>
         <Ocean />
       </Suspense>
