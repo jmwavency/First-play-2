@@ -59,7 +59,6 @@ export default function HeroMedia() {
           onError={() => setUseVideo(false)}
           style={{ opacity: useVideo ? 1 : 0 }}
         >
-          <source src="/hero-wave.webm" type="video/webm" />
           <source src="/hero-wave.mp4" type="video/mp4" />
         </video>
       </div>

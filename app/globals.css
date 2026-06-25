@@ -213,8 +213,8 @@ a {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Pull a bright daylight surf clip toward the dark Wavency teal. */
-  filter: brightness(0.62) contrast(1.06) saturate(1.05) hue-rotate(8deg);
+  /* Footage is already dark/teal — light touch toward Wavency teal. */
+  filter: brightness(0.82) contrast(1.05) saturate(1.12) hue-rotate(6deg);
   transition: opacity 1.1s var(--ease);
 }
 .hero-grade {
@@ -223,14 +223,14 @@ a {
   pointer-events: none;
   background: linear-gradient(
       180deg,
-      rgba(2, 11, 13, 0.55) 0%,
-      rgba(0, 60, 70, 0.18) 35%,
-      rgba(2, 11, 13, 0.65) 100%
+      rgba(2, 11, 13, 0.45) 0%,
+      rgba(0, 70, 82, 0.12) 38%,
+      rgba(2, 11, 13, 0.55) 100%
     ),
     radial-gradient(
-      120% 100% at 50% 30%,
-      rgba(0, 111, 128, 0.28),
-      transparent 70%
+      120% 100% at 50% 28%,
+      rgba(0, 111, 128, 0.22),
+      transparent 72%
     );
   mix-blend-mode: multiply;
 }
@@ -248,7 +248,13 @@ a {
   flex-direction: column;
   justify-content: center;
   pointer-events: none;
-  background: radial-gradient(
+  background: linear-gradient(
+      90deg,
+      rgba(2, 11, 13, 0.5) 0%,
+      rgba(2, 11, 13, 0.18) 38%,
+      transparent 62%
+    ),
+    radial-gradient(
       120% 90% at 50% 0%,
       transparent 40%,
       rgba(2, 3, 10, 0.45) 100%
